@@ -1,0 +1,5 @@
+\contentsline {chapter}{\numberline {1}Building a Mathematical Model}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Objects, Questions, and Rankings}{4}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Statistics and Participants}{5}{section.1.2}%
+\contentsline {section}{\numberline {1.3}An Individual Participant}{6}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Formalizing our Mathematical Model}{7}{chapter.2}%

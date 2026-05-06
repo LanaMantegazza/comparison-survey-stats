@@ -1,0 +1,332 @@
+% Lana's reconstruction and subsequent ripoff of Asuka's lecture notes' LaTeX preamble.
+
+\documentclass[12pt]{book}
+
+% Page layout
+\usepackage[
+    letterpaper,
+    reversemarginpar = true,
+    asymmetric       = true,
+    bindingoffset    = -0.5in,
+    left             = 1.5in,
+    right            = 1.25in,
+    top              = 1.40in,
+    bottom           = 1.8in,
+    footskip         = .25in
+]{geometry}
+
+% Packages
+\usepackage[T1]{fontenc}
+\usepackage    {lmodern}
+\usepackage    {amsmath,amssymb,amsthm}
+\usepackage    {hyperref}
+\usepackage    {calculator}
+\usepackage    {etoolbox}
+\usepackage    {parskip}
+\usepackage    {geometry}
+\usepackage    {atbegshi}
+\usepackage    {varwidth}
+\usepackage    {calc}
+\usepackage    {graphicx}
+\usepackage    {enumitem}
+\graphicspath{ {./resources/} }
+
+% No-Indent footnotes
+\usepackage[hang,flushmargin]{footmisc}
+
+% Lengths and spacing
+\makeatletter
+\newlength{\boxmargin}
+\setlength{\parskip}{0.375em}
+\setlength{\boxmargin}{8pt}
+\g@addto@macro\normalsize{
+    \setlength\abovedisplayskip{12pt}
+    \setlength\belowdisplayskip{5pt}
+    \setlength\abovedisplayshortskip{0pt}
+    \setlength\belowdisplayshortskip{5pt}
+}
+\newcommand{\midbox}[1]{
+    \setlength{\fboxsep}{\boxmargin}
+    \fbox{
+	\parbox{\dimexpr\textwidth-(\boxmargin*2)\relax}{#1}
+    }
+}
+
+\makeatother
+
+\pagenumbering{gobble}
+
+% -------------------------------- Commands -------------------------------
+
+% Enable hanging indents for specific theorem environments
+\newcommand{\hangthm}[2]{
+    \AtBeginEnvironment{#1} {
+	\setlength{\hangindent}{\widthof{\textbf{#2 \csname the#1\endcsname}. \hspace{2pt}}}
+	\hangafter=1
+    }
+    \AtEndEnvironment{#1} { \noindent }
+    \AfterEndEnvironment{#1} { \setlength{\hangindent}{0pt} \hangafter=10000 }
+}
+
+% Enable indentation for all lines until conclusion of theorem environment
+% \newcommand{\indentthm}[1]{
+%     \AtBeginEnvironment{#1} {
+% 	\setlength{\hangindent}{2em}
+%     }
+%     \AtEndEnvironment{#1} { \noindent \setlength{\hangindent}{0pt} }
+% }
+
+% Enable footnotes without markers
+\newcommand\blankfootnote[1]{%
+  \let\thefootnote\relax\footnotetext{#1}%
+  \let\thefootnote\svthefootnote%
+}
+
+% Decleration and definition of \st and \suchthat
+\newcommand{\setst}[1]{\def\st{#1} \def\suchthat{#1}}
+\setst{ : }
+
+% Function definition
+\NewDocumentCommand{\funcimpl}{ o o m m m }{
+    #3 : #4 \longrightarrow #5
+    \IfValueT{#1} {
+	\IfValueT{#2} {
+	    { \text{\st} #1 \longmapsto #2 }
+	} 
+    } 
+}
+
+\NewDocumentCommand{\func} { o o m m m } {
+    \funcimpl [#1] [#2] {#3} {#4} {#5}
+}
+
+% Path definition
+\NewDocumentCommand{\fpath} { o o m m } {
+    \funcimpl [#1] [#2] {\mathbf{#3}} {\mathbb{R}} {\mathbb{R}^#4}
+}
+
+\NewDocumentCommand{\Definition} { m m } {
+    \begin{definition}\label{#1}
+	#2
+    \end{definition}
+}
+
+% ------------------------------- Shortcuts -------------------------------
+
+\newcommand{\bld}[1]{\textbf{#1}}
+\newcommand{\rbb}{\mathbb{R}}
+\newcommand{\rbbm}{\mathbb{R}^m}
+\newcommand{\rbbn}{\mathbb{R}^n}
+\newcommand{\cbb}{\mathbb{C}}
+\newcommand{\fbb}{\mathbb{F}}
+\newcommand{\pbb}{\mathbb{P}}
+
+% Style for definitions, remarks, theorems, lemmas, propositions, and corollaries
+\newtheoremstyle{definitionstyle}
+    {1.0ex}     {1.0ex}
+    {}          {}
+    {\bfseries} {}
+    {0.6em}     {\thmname{#1}\thmnumber{ #2.}\thmnote{ #3:}}
+
+% Definition of theorem environments
+\theoremstyle{definitionstyle}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{remark}[definition]{Remark}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{corollary}[definition]{Corollary}
+\newtheorem{example}[definition]{Example}
+
+\newtheorem{procedure}[definition]{Procedure}
+
+% Set proof style to definition style
+\makeatletter
+\renewenvironment{proof}[1][\proofname]{\par
+  \pushQED{\qed}%
+  \normalfont \topsep6\p@\@plus6\p@\relax
+  \trivlist
+  \item[\hskip\labelsep
+		\bfseries
+	#1\@addpunct{.}]\ignorespaces
+}{
+  \popQED\endtrivlist\@endpefalse
+}
+\makeatother
+
+% Enable hanging indent for definitions
+% \hangthm{definition}{Definition}
+
+% Enable full indentation for procedures
+% \indentthm{procedure}
+
+% Automatic numbering of equations
+\numberwithin{equation}{section}
+
+
+
+% ------------------------------ End Preamble -----------------------------
+
+\begin{document}
+
+% --------------------------------- Title ---------------------------------
+
+\title{Individual Comparisons of Elements in a Set as a Method of Ranking}
+\author{Lana Mantegazza}
+\date{\today}
+\maketitle
+\newpage
+\setcounter{page}{1}
+
+% Conditional chapter start reformatting
+% \let\oldchapter\chapter
+% \renewcommand{\chapter}[1]{\oldchapter{#1}\fontseries{l}\selectfont}
+% \let\oldsection\sectioon
+% \renewcommand{\section}[1]{\oldsection{#1}\textmd}
+
+% -------------------------------- Preface --------------------------------
+
+\chapter*{Preface}
+A document detailing thoughts on how one might design an experiment reviewing the effectiveness of "which is better" style surveys, and how their structures could create biases in the data.
+\\
+
+% --------------------------- Table of Contents ---------------------------
+
+\newpage
+\setcounter{page}{1}
+
+\tableofcontents
+% ------------------------------- Chapter 1 -------------------------------
+
+% # Markdown Notes
+% 
+% The following is what I wrote down on paper before creating this repo.
+% 
+% 
+% ## "Which do you prefer" style voting for ranking elements in a survey.
+% 
+% Suppose we have a list $L$ of objects, and want a single person to rank those objects in order, with respect to some subjective criterion (e.g. favourite to least favourite, best to worst).
+% 
+% We may assume that any given person is not too involved in the survey process, and that $|L|$ is very large.
+% 
+% Suppose that person is presented with two elements from the list, and asked which of the two fulfills the subjective criterion more (e.g. which do you prefer, which is better). Let us refer to each of these individual comparisons as questions, and the responses given to those questions as their respective answers.
+% 
+% Let $L$ a set of all objects being ranked, and let $l_i$ denote the $i^{th}$ entry in the set $L$.
+% 
+% Let $q_{ij}$ denote the question comparing the $i^{th}$ and $j^{th}$ elements in the set, and let $q_i$ denote the set of all questions including the $i^{th}$ element.
+% 
+% Let $\text{Score} : {}$
+% 
+% Let $\text{Score}(q_{ij})=(i_j,j_i)$ be a pair of values such that $i_j$ is how many times $l_i$ was given as the answer to the question $q_{ij}$, and $j_i$ is how many times $l_j$ was given as the answer to the question $q_{ij}$.
+% 
+% Let $\text{Score}(q_i)=\sum_{j=1}^{|L|}\text{Score}(q_{ij})$
+% 
+% ### An Individual Participant
+% 
+% Let $P_i$ denote participant with the identifier $i$.
+% 
+% Consider a single participant, $P_1$, that takes the survey, and suppose they are willing to answer arbitrarily many questions.
+% 
+% 
+% Moreover, let 
+% 
+%  i) What is the minimum number $q_1$ of total questions given to participant 1 required such that every element $l_i$ in the set $L$ has been ranked based on answers to at least $N_p(l_i)$ questions given to participant 1?
+%  ii) How should the rankings $R(l_i)$ be determined from the answers given to questions?
+%  
+% ### A group of participants
+% 
+% Now, consider a set of n participants.
+
+\chapter*{Premise}
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+In this document we explore the ``which do you prefer'' style of survey used for ranking a list of things. Suppose we have a list of things that we want a participant in our survey to rank with respect to some subjective criterion (e.g. favourite to least favourite, best to worst). If the list of potential things to rank is overwhelmingly large, it is very difficult for a participant to accurately rank all of them manually.
+
+\vspace{0.5em}
+
+However, if we instead present our participant two elements from the list, and ask which of the two they would rank above the other based on the subjective criterion, the survey becomes far more tractible. This type of survey is what we will explore. We will refer to the ``list of things'' as a set of objects, and to each individual comparison we ask the participant to make as a question.
+
+\chapter{Building a Mathematical Model}
+
+We will seek to construct a mathematical model with which we can analyse our topic of interest more abstractly.
+
+In this chapter, we may assume 
+$$ i,j,k,n\in\mathbb{N}\text{, and } i,j\leq n$$
+
+\newpage
+\section{Objects, Questions, and Rankings}
+
+To begin, our model should include a list of objects to be ranked, and some criterion with respect to which the objects are ranked.
+Let us define the following to begin constructing this model.
+
+\vspace{0.5em}
+
+\begin{definition}[List / Set of Objects]
+    Let $L = \left\{l_1, l_2, \cdots, l_n \right\}$ be a set of $n$ objects. Then $L$ is our \textbf{list of objects} or, equivalently, our \textbf{set of objects}.
+\end{definition}
+
+\vspace{0.5em}
+
+\begin{definition}[Ranking] Let $r_i,\in \mathbb{N}$ be a natural number. Then $r_i$ is the \textbf{ranking} of $l_i$ if 
+    $$\forall i\in\mathbb{N}, i \leq n, \exists!\;r_i\in\mathbb{N} \suchthat r_i \leq n$$
+\end{definition}
+
+\vspace{0.5em}
+
+\begin{definition}[Relative Ranking]
+    Let $\func{\leq\;}{L\times L}{\{\text{True, False}\}}$ be a binary relation on $L$. Then we have
+	$$ l_i\leq l_j \iff r_i \leq r_j \iff l_i\text{ ranks lower than }l_j$$
+\end{definition}
+
+\vspace{0.5em}
+
+\begin{definition}[Questions]
+    Let $q_{ij}=q_{ji}=\left\{l_i,l_j\right\} \subseteq L$ be the unordered pair containing the $i^\text{th}$ and $j^\text{th}$ elements in the set $L$. Then $q_{ij}$ also denotes the \textbf{question} asked to a participant that is of the form $$\text{``Which is true: }l_i \leq l_j\text{ or }l_j \leq l_i\text{?''}$$
+\end{definition}
+
+\vspace{0.5em}
+
+\begin{remark}
+    We will also let $Q = \left\{q_{ij} \;|\; i \neq j, \;\forall i,j\leq n\right\}$ the set of all questions we could ask a participant, and let $q_k=\{q_{ij}\in Q \;|\; i = k \text{ or } j = k\}$ all questions involving $l_k$.
+\end{remark}
+
+\vspace{1em}
+
+This model is sound in theory, but flawed in practice. While it works for any well defined binary option $\leq$, it doesn't account for subjective criteria, making it unsuitable for an actual survey. Therefore, it would be more useful to instead have each element in the list be given a score based on how many times it was picked over another during the survey.
+
+\newpage
+\section{Statistics and Participants}
+
+%\begin{itemize}
+%    \item Let $$ \func{\text{TimesAsked}}{Q}{\mathbb{N}} $$
+%
+%    \item Let $\text{Score}(q_{ij})=(i_j,j_i)$ be a pair of values such that $i_j$ is how many times $l_i$ was given as the answer to the question $q_{ij}$, and $j_i$ is how many times $l_j$ was given as the answer to the question $q_{ij}$.
+%
+%    \item Let $\text{Score}(q_i)=\sum_{j=1}^{|L|}\text{Score}(q_{ij})$
+%\end{itemize}
+
+
+\newpage
+\section{An Individual Participant}
+
+Let $P_i$ denote participant with the identifier $i$.
+
+Consider a single participant, $P_1$, that takes the survey, and suppose they are willing to answer arbitrarily many questions.
+
+\begin{enumerate}[label=\roman*)]
+    \item What is the minimum number $q_1$ of total questions given to participant 1 required such that every element $l_i$ in the set $L$ has been ranked based on answers to at least $N_p(l_i)$ questions given to participant 1?
+    \item How should the rankings $R(l_i)$ be determined from the answers given to questions?
+    \item How would one merge rankings into an average to see the average ranking for the list
+    \item Should some questions be shown first over others when surveying multiple people to account for potential biases?
+    \item How does the phrasing of the criterion affect the outcome of the survey?
+\end{enumerate}
+ 
+%\section{A group of participants}
+%
+%Now, consider a set of n participants.
+
+\chapter{Formalizing our Mathematical Model}
+
+
+\end{document}
